@@ -7,5 +7,5 @@
 | Lab No. | Topic |
 | :--- | :--- |
 | Lab1 | Requirments Engineering & UML Use-Case Modelling |
-| Lab2 | |
+| Lab2 | |Food Surplus Redistribution Platform - Jira Scrum Backlog and Sprint Report |
 | Lab3 | |
