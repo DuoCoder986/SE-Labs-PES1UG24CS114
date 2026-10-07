@@ -1,0 +1,182 @@
+@startuml FoodBankUseCaseDiagram
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+skinparam usecase {
+    BackgroundColor #F8F9FA
+    BorderColor #333333
+    ArrowColor #333333
+}
+
+skinparam actor {
+    BorderColor #333333
+}
+
+title Food Bank Surplus Redistribution Platform - Use Case Diagram
+
+
+' =========================================================
+' ACTORS
+' =========================================================
+
+actor "Donor Partner\n(Restaurant / Grocery Store)" as Donor
+
+actor "Shelter Coordinator\n(Verified Shelter)" as Shelter
+
+actor "System Administrator" as Admin
+
+
+' =========================================================
+' SYSTEM BOUNDARY
+' =========================================================
+
+rectangle "Food Bank Surplus Redistribution Platform" {
+
+    ' -----------------------------------------------------
+    ' ACCOUNT / VERIFICATION
+    ' -----------------------------------------------------
+
+    usecase "Register / Verify\nAccount" as UC_Account
+
+
+    ' -----------------------------------------------------
+    ' DONOR USE CASES
+    ' -----------------------------------------------------
+
+    usecase "Post Surplus\nFood Batch" as UC_Post
+
+    usecase "Enter Food Batch\nDetails" as UC_Details
+
+    usecase "Specify Quantity" as UC_Quantity
+
+    usecase "Set Expiry Time" as UC_Expiry
+
+    usecase "Add Dietary\nTags" as UC_Tags
+
+    usecase "Publish Food Batch" as UC_Publish
+
+
+    ' -----------------------------------------------------
+    ' SHELTER USE CASES
+    ' -----------------------------------------------------
+
+    usecase "Browse Available\nFood Batches" as UC_Browse
+
+    usecase "View Food Batch\nDetails" as UC_View
+
+    usecase "Reserve Pickup\nWindow" as UC_Reserve
+
+    usecase "Validate Food\nAvailability & Expiry" as UC_Validate
+
+    usecase "Receive Pickup\nVerification Details" as UC_Verification
+
+
+    ' -----------------------------------------------------
+    ' NOTIFICATION USE CASES
+    ' -----------------------------------------------------
+
+    usecase "Notify Nearby\nShelters" as UC_Notify
+
+    usecase "Identify Eligible\nShelters" as UC_Eligible
+
+    usecase "Check 5 km\nRadius" as UC_Radius
+
+    usecase "Send Push\nNotification" as UC_Push
+
+
+    ' -----------------------------------------------------
+    ' EXPIRY MANAGEMENT
+    ' -----------------------------------------------------
+
+    usecase "Monitor Food\nExpiry" as UC_MonitorExpiry
+
+    usecase "Mark Batch\nUnavailable" as UC_Unavailable
+
+    usecase "Remove Expired Batch\nfrom Claim Board" as UC_Remove
+
+
+    ' -----------------------------------------------------
+    ' ADMINISTRATION / LOGGING
+    ' -----------------------------------------------------
+
+    usecase "View Reservation\n& Activity Logs" as UC_Logs
+
+    usecase "Monitor Platform\nOperations" as UC_Monitor
+
+    usecase "Configure Notification\n& System Rules" as UC_Config
+}
+
+
+' =========================================================
+' ACTOR ASSOCIATIONS
+' =========================================================
+
+Donor --> UC_Account
+Donor --> UC_Post
+
+Shelter --> UC_Account
+Shelter --> UC_Browse
+Shelter --> UC_Reserve
+Shelter --> UC_Verification
+
+Admin --> UC_Logs
+Admin --> UC_Monitor
+Admin --> UC_Config
+
+
+' =========================================================
+' DONOR POSTING FLOW
+' =========================================================
+
+UC_Post ..> UC_Account : <<include>>
+UC_Post ..> UC_Details : <<include>>
+UC_Post ..> UC_Publish : <<include>>
+
+UC_Details ..> UC_Quantity : <<include>>
+UC_Details ..> UC_Expiry : <<include>>
+UC_Details ..> UC_Tags : <<include>>
+
+
+' =========================================================
+' SHELTER RESERVATION FLOW
+' =========================================================
+
+UC_Reserve ..> UC_Account : <<include>>
+UC_Reserve ..> UC_Validate : <<include>>
+UC_Reserve ..> UC_Verification : <<include>>
+
+UC_Browse ..> UC_View : <<include>>
+
+
+' =========================================================
+' NOTIFICATION FLOW
+' =========================================================
+
+UC_Notify ..> UC_Eligible : <<include>>
+UC_Notify ..> UC_Radius : <<include>>
+UC_Notify ..> UC_Push : <<include>>
+
+UC_Post ..> UC_Notify : <<include>>
+
+
+' =========================================================
+' EXPIRY MANAGEMENT
+' =========================================================
+
+UC_MonitorExpiry ..> UC_Unavailable : <<include>>
+UC_Unavailable ..> UC_Remove : <<include>>
+
+' Expiry is an optional/conditional behavior
+UC_Reserve ..> UC_MonitorExpiry : <<extend>>
+
+
+' =========================================================
+' ADMIN MONITORING
+' =========================================================
+
+UC_Monitor ..> UC_Logs : <<include>>
+
+@enduml
